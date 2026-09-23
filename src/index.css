@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+@property --gold-orbit-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes gold-border-orbit {
+  to {
+    --gold-orbit-angle: 360deg;
+  }
+}
+
+@keyframes silk-background-drift {
+  0% {
+    transform: scale(1.08) translate3d(-1.5%, -1%, 0);
+  }
+  50% {
+    transform: scale(1.14) translate3d(1.5%, 1%, 0);
+  }
+  100% {
+    transform: scale(1.1) translate3d(-0.5%, 1.5%, 0);
+  }
+}
+
+@theme {
+  /* ---- Color system ----
+     Matches Shodhan's NUVORO style guide exactly: near-black base,
+     a single restrained gold accent (with a light/dark pair for
+     gradients), and a warm-gray text scale. No second hue. */
+  --color-bg: #0a0a0a;         /* Nuvoro Dark — primary background */
+  --color-bg-raised: #0d0d0d;
+  --color-surface: #121212;    /* Nuvoro Card — card background */
+  --color-surface-2: #1a1a1a;  /* Nuvoro Card Hover */
+  --color-border: #262626;     /* Nuvoro Border */
+  --color-border-soft: #1c1c1c;
+
+  --color-ink: #e5e5e5;        /* Primary text */
+  --color-ink-muted: #a3a3a3;  /* Secondary text / Nuvoro Muted */
+  --color-ink-faint: #6b6b6b;  /* Muted text */
+  --color-ink-disabled: #525252;
+
+  --color-brass: #d4af37;        /* Nuvoro Gold — primary accent */
+  --color-brass-light: #f3e5ab;  /* Gold Light — highlights / gradient top stop */
+  --color-brass-soft: #997a15;   /* Gold Dark — hover / active states */
+  --color-brass-dim: color-mix(in srgb, #d4af37 14%, #0a0a0a);
+
+  /* Kept as aliases so every existing component that reads a "cyan"
+     token (used previously for technical/cloud accents) renders in
+     the same gold system — the site now uses a single accent color. */
+  --color-cyan: var(--color-brass);
+  --color-cyan-soft: var(--color-brass-soft);
+  --color-cyan-dim: color-mix(in srgb, #d4af37 10%, #0a0a0a);
+
+  --font-display: "Cinzel", "Georgia", serif;
+  --font-body: "Plus Jakarta Sans", "Inter", sans-serif;
+  --font-mono: "Plus Jakarta Sans", "Inter", sans-serif;
+
+  --container-shell: 1180px;
+
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.4);
+  --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    body::before {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+
+  body {
+    /* A full-page, black-and-gold "silk" backdrop. The layers stay fixed
+       behind the content so the premium treatment is present on every route
+       without competing with the readable card surfaces. */
+    position: relative;
+    isolation: isolate;
+    min-height: 100vh;
+    background-color: #050504;
+    background-image:
+      radial-gradient(ellipse 95% 54% at 4% -18%, rgba(244, 206, 104, 0.14) 0%, rgba(157, 107, 19, 0.10) 32%, transparent 67%),
+      radial-gradient(ellipse 70% 44% at 108% 19%, rgba(212, 175, 55, 0.12) 0%, transparent 68%),
+      linear-gradient(145deg, #050504 0%, #0d0c08 46%, #050504 100%);
+    background-attachment: fixed;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.8;
+    background-image:
+      radial-gradient(ellipse 115% 45% at -12% -11%, transparent 47%, rgba(70, 52, 15, 0.48) 48.5%, rgba(239, 192, 68, 0.52) 49.25%, rgba(109, 72, 10, 0.34) 50.25%, transparent 53%),
+      radial-gradient(ellipse 96% 39% at 108% 19%, transparent 45%, rgba(61, 45, 13, 0.45) 46.5%, rgba(225, 176, 50, 0.48) 47.25%, rgba(95, 62, 10, 0.34) 48.25%, transparent 51%),
+      radial-gradient(ellipse 106% 42% at -8% 89%, transparent 46%, rgba(60, 43, 12, 0.38) 47.5%, rgba(208, 157, 37, 0.42) 48.25%, rgba(86, 57, 9, 0.28) 49.25%, transparent 52%);
+    filter: blur(0.35px);
+    transform-origin: center;
+    animation: silk-background-drift 22s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+
+  /* Mouse effects are enabled only by the small client-side helper and only
+     on devices with a precise pointer. They remain decorative: touch users
+     and people who prefer reduced motion get the same static, readable UI. */
+  @media (hover: hover) and (pointer: fine) {
+    body.mouse-effects-enabled::after {
+      content: "";
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(
+        280px circle at var(--mouse-x, -400px) var(--mouse-y, -400px),
+        rgba(243, 202, 93, 0.12),
+        rgba(212, 175, 55, 0.045) 34%,
+        transparent 72%
+      );
+      transition: opacity 180ms ease-out;
+    }
+
+    body.mouse-effects-enabled #root {
+      position: relative;
+      z-index: 1;
+    }
+
+    body.mouse-effects-enabled section {
+      position: relative;
+      isolation: isolate;
+    }
+
+    body.mouse-effects-enabled section::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: -2rem 0;
+      pointer-events: none;
+      opacity: 0;
+      background: radial-gradient(
+        480px circle at var(--section-mouse-x, 50%) var(--section-mouse-y, 50%),
+        rgba(212, 175, 55, 0.11),
+        transparent 68%
+      );
+      transition: opacity 260ms ease-out;
+    }
+
+    body.mouse-effects-enabled section[data-mouse-active]::after {
+      opacity: 1;
+    }
+
+    body.mouse-effects-enabled .card-edge {
+      transform: translate3d(0, 0, 0);
+      transform-style: preserve-3d;
+      transition: transform 180ms ease-out, border-color 180ms ease-out, box-shadow 180ms ease-out;
+      will-change: transform;
+    }
+
+    body.mouse-effects-enabled .card-edge[data-mouse-card] {
+      transform: perspective(900px) rotateX(var(--card-rotate-x)) rotateY(var(--card-rotate-y)) translateY(-3px);
+      border-color: color-mix(in srgb, var(--color-brass) 56%, var(--color-border));
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.34), 0 0 26px rgba(212, 175, 55, 0.1);
+    }
+
+    /* Gold streaks orbit the panel edge on hover, like a moving beam around
+       a premium metal frame. The mask confines the animation to the border
+       so it never distracts from the card's content. */
+    body.mouse-effects-enabled .card-edge::before {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      inset: -1px;
+      padding: 1px;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0.34;
+      background: conic-gradient(
+        from var(--gold-orbit-angle),
+        transparent 0deg 34deg,
+        rgba(153, 122, 21, 0.18) 42deg,
+        rgba(212, 175, 55, 0.9) 51deg,
+        rgba(243, 229, 171, 1) 57deg,
+        rgba(212, 175, 55, 0.28) 66deg,
+        transparent 78deg 170deg,
+        rgba(212, 175, 55, 0.7) 185deg,
+        rgba(243, 229, 171, 0.9) 191deg,
+        transparent 205deg 360deg
+      );
+      -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: opacity 180ms ease-out, filter 180ms ease-out;
+    }
+
+    body.mouse-effects-enabled .card-edge:hover::before,
+    body.mouse-effects-enabled .card-edge[data-mouse-card]::before {
+      opacity: 1;
+      filter: drop-shadow(0 0 4px rgba(243, 202, 93, 0.75)) drop-shadow(0 0 12px rgba(212, 175, 55, 0.28));
+      animation: gold-border-orbit 2.8s linear infinite;
+    }
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+    font-weight: 600;
+  }
+
+  ::selection {
+    background: var(--color-brass);
+    color: var(--color-bg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: var(--container-shell);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Subtle technical grid pattern used behind hero / section backdrops */
+  .grid-field {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  .glass {
+    background: color-mix(in srgb, var(--color-surface) 82%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .card-edge {
+    border: 1px solid var(--color-border);
+  }
+
+  /* "Gold Gradient" from the NUVORO style guide — used for headline
+     text and other premium display moments. */
+  .text-gradient-brass {
+    background: linear-gradient(
+      135deg,
+      var(--color-brass-light) 0%,
+      var(--color-brass) 55%,
+      var(--color-brass-soft) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Short technical/status labels — tracked, uppercase-friendly sans
+     (no monospace face, per the NUVORO two-font system). */
+  .mono-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+
+  /* Short, all-caps section kickers styled after the style guide's own
+     section headers ("COLOR PALETTE", "TYPOGRAPHY", etc). */
+  .heading-eyebrow {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+}
