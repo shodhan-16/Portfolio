@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+
+# Portfolio
+
+=======
+
 # Shodhan — Portfolio
 
 A personal portfolio site for Shodhan, an Information Science & Engineering
@@ -43,13 +49,13 @@ shodhan-portfolio/
 
 ### Routes
 
-| Path | Renders |
-|---|---|
-| `/` | Home (all sections, in order) |
-| `/projects/smart-village` | Smart Village Management System case study |
-| `/work/nuvoro` | NUVORO case study |
-| `/work/nexova` | NEXOVA case study |
-| `/work/creative/nexova-brand-film` | NEXOVA Brand Film case study |
+| Path                               | Renders                                    |
+| ---------------------------------- | ------------------------------------------ |
+| `/`                                | Home (all sections, in order)              |
+| `/projects/smart-village`          | Smart Village Management System case study |
+| `/work/nuvoro`                     | NUVORO case study                          |
+| `/work/nexova`                     | NEXOVA case study                          |
+| `/work/creative/nexova-brand-film` | NEXOVA Brand Film case study               |
 
 ---
 
@@ -58,19 +64,20 @@ shodhan-portfolio/
 You should almost never need to touch a component to update content.
 Everything lives in `src/data/`:
 
-| File | Controls |
-|---|---|
-| `profile.js` | Name, role, headline, about text, education, email, GitHub/LinkedIn URLs, resume file path |
-| `skills.js` | The 6 skill categories and each skill's level (`learning` / `practicing` / `project`) |
-| `projects.js` | The featured Smart Village project, its full case-study copy, the 2 cloud lab projects, and the 3 Python mini-projects |
-| `selectedWork.js` | NUVORO and NEXOVA cards + their case-study section copy |
-| `creativeWork.js` | Creative/video projects + their case-study copy |
-| `certifications.js` | The 3 certification cards |
+| File                | Controls                                                                                                               |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `profile.js`        | Name, role, headline, about text, education, email, GitHub/LinkedIn URLs, resume file path                             |
+| `skills.js`         | The 6 skill categories and each skill's level (`learning` / `practicing` / `project`)                                  |
+| `projects.js`       | The featured Smart Village project, its full case-study copy, the 2 cloud lab projects, and the 3 Python mini-projects |
+| `selectedWork.js`   | NUVORO and NEXOVA cards + their case-study section copy                                                                |
+| `creativeWork.js`   | Creative/video projects + their case-study copy                                                                        |
+| `certifications.js` | The 3 certification cards                                                                                              |
 
 ### Add a new engineering project
 
 Right now there's a single featured project (`featuredProject` in
 `projects.js`). To add a second one:
+
 1. Turn `featuredProject` into an array (e.g. `engineeringProjects`).
 2. Update `Projects.jsx` to `.map()` over it instead of rendering one card.
 3. Give each project a unique `slug` and add a matching case-study object,
@@ -104,6 +111,7 @@ Add an object to the `certifications` array in `certifications.js`. Leave
 
 Edit `src/data/profile.js`. Two fields are placeholders you should update
 before deploying:
+
 - `email` — currently a placeholder address
 - `resumeFile` — currently `/resume/shodhan-resume.pdf`; place the actual
   PDF at that path under `public/resume/`, or change the filename here to
@@ -194,7 +202,7 @@ script).
 - **Type**: Space Grotesk for headings, Inter for body copy, JetBrains Mono
   for small technical labels (tech tags, status badges, eyebrow text).
 - **Skill levels** are qualitative (`Learning` / `Practicing` / `Project
-  Experience`) rather than invented percentages, per the brief.
+Experience`) rather than invented percentages, per the brief.
 - **Status badges** (`Completed`, `In Progress`, `In Development`,
   `Concept`, `Planned`, etc.) are used throughout so nothing overstates
   how finished a project is.
@@ -202,3 +210,4 @@ script).
   case-study links) are clearly marked with comments in the data files —
   search for `PLACEHOLDER` before deploying to make sure nothing
   fake-looking ships.
+  > > > > > > > eb74976 (Add Smart Village video project demo)
