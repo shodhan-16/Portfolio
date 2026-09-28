@@ -24,7 +24,7 @@ export const selectedWork = [
     description:
       "A modern web studio concept focused on web development, digital experiences, branding, and professional presentation.",
     technologies: ["HTML", "CSS", "JavaScript"],
-    image: "/images/selected-work/nexova/hero.png",
+    image: "/images/selected-work/nexova/nexova.png",
     website: "",
     github: "",
     status: "Concept",
